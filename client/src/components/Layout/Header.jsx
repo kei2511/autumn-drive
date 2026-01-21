@@ -1,50 +1,77 @@
-import { Menu, Search, User } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Menu, Search, Bell, ChevronDown } from "lucide-react";
+import { useState } from "react";
 
-const Header = ({ setSidebarOpen, view, searchTerm, setSearchTerm, stats, api }) => {
-  // Sync Status Logic (Simplified for Cloud Mode)
-  const [syncStatus, setSyncStatus] = useState("Online");
-  // No polling needed for Supabase!
+const Header = ({ setSidebarOpen, view, searchTerm, setSearchTerm, stats, user }) => {
+  // Sync Status Logic (Mocked)
+  const syncStatus = "Online";
 
   return (
-    <header className="h-16 border-b border-ctp-surface0/20 flex items-center justify-between px-6 shrink-0 bg-ctp-base/80 backdrop-blur-md shadow-sm z-10 transition-all duration-300">
-      <div className="flex items-center gap-4 flex-1">
+    <header className="h-20 flex items-center justify-between px-8 shrink-0 z-20">
+      {/* Search Bar - Floating & Centered (ish) */}
+      <div className="flex items-center gap-6 flex-1">
         <button
-          className="md:hidden p-2 text-ctp-text hover:bg-ctp-surface0/20 rounded-full transition-colors"
+          className="md:hidden p-2 text-ctp-text hover:bg-white/10 rounded-xl transition-colors"
           onClick={() => setSidebarOpen(true)}
         >
           <Menu size={24} />
         </button>
-        <h2 className="text-lg font-bold text-ctp-text hidden md:block">
-          {view === "dashboard" ? "Dashboard" : view === "files" ? "My Files" : "Recent Files"}
-        </h2>
 
-        {/* Search Bar */}
-        <div className="relative max-w-md w-full ml-4 hidden sm:block">
-          <label className="input input-sm input-bordered flex items-center gap-2 bg-ctp-surface0/50 border-transparent focus-within:border-ctp-blue/50 focus-within:bg-ctp-base text-ctp-text placeholder:text-ctp-subtext0 rounded-lg w-full transition-all">
-            <Search size={16} className="text-ctp-subtext0" />
-            <input
-              type="text"
-              className="grow p-0 placeholder:text-ctp-subtext0"
-              placeholder="Search files..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </label>
+        <div className="hidden md:flex flex-col">
+          <h2 className="text-xl font-bold text-white tracking-tight">
+            {view === "dashboard" ? "Dashboard" : view === "files" ? "My Files" : "Recent Files"}
+          </h2>
+          <p className="text-xs text-gray-400 font-medium">Welcome back, {user?.email?.split('@')[0] || "User"}</p>
+        </div>
+
+        {/* Global Search */}
+        <div className="relative max-w-lg w-full ml-12 hidden sm:block group">
+          <div className="absolute inset-y-0 left-4 flex items-center pointer-events-none">
+            <Search size={18} className="text-gray-500 group-focus-within:text-blue-400 transition-colors" />
+          </div>
+          <input
+            type="text"
+            className="w-full bg-white/5 border border-white/5 text-sm text-white placeholder-gray-500 rounded-2xl py-3 pl-12 pr-4 focus:outline-none focus:bg-white/10 focus:ring-1 focus:ring-blue-500/50 transition-all shadow-lg shadow-black/20"
+            placeholder="Search files, folders, or types..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <div className="absolute inset-y-0 right-3 flex items-center">
+            <kbd className="hidden sm:inline-flex items-center gap-1 px-2 h-6 text-[10px] font-bold text-gray-500 bg-white/5 rounded border border-white/10">CTRL K</kbd>
+          </div>
         </div>
       </div>
 
-      {/* Profile / Stats */}
-      <div className="flex items-center gap-4">
-        {/* Sync Indicator */}
-        <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-ctp-surface0/30 border border-ctp-surface0/10">
-          <div className={`w-2 h-2 rounded-full ${syncStatus === "Synced" || syncStatus === "Online" ? "bg-green-400 animate-pulse" : syncStatus === "Saving..." ? "bg-amber-400 animate-bounce" : "bg-red-400"}`}></div>
-          <span className="text-xs font-bold text-ctp-subtext0 w-12 text-center">{syncStatus}</span>
+      {/* Profile / Actions */}
+      <div className="flex items-center gap-5">
+
+        {/* Sync Pill */}
+        <div className="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md">
+          <div className="relative">
+            <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></div>
+            <div className="absolute inset-0 w-2 h-2 rounded-full bg-emerald-400 blur-sm animate-pulse"></div>
+          </div>
+          <span className="text-[10px] font-bold text-gray-400 tracking-wider uppercase">System {syncStatus}</span>
         </div>
 
-        <span className="hidden md:block text-xs font-bold text-ctp-subtext0/60 uppercase tracking-wider border-l border-ctp-surface0/20 pl-4">
-          {stats.count} ITEMS
-        </span>
+        <button className="relative p-2.5 text-gray-400 hover:text-white hover:bg-white/10 rounded-xl transition-all">
+          <Bell size={20} />
+          <span className="absolute top-2.5 right-2.5 w-2 h-2 bg-red-500 rounded-full border border-[#1e1e2e]"></span>
+        </button>
+
+        <div className="h-8 w-[1px] bg-white/10 mx-1"></div>
+
+        <button className="flex items-center gap-3 pl-1 pr-3 py-1 rounded-full hover:bg-white/5 border border-transparent hover:border-white/10 transition-all group">
+          <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 p-[2px]">
+            <div className="w-full h-full rounded-full bg-[#1e1e2e] flex items-center justify-center text-xs font-bold text-white uppercase">
+              {user?.email?.[0] || "U"}
+            </div>
+          </div>
+          <div className="hidden md:block text-left">
+            <p className="text-sm font-bold text-white leading-none group-hover:text-blue-400 transition-colors">{user?.email?.split('@')[0]}</p>
+            <p className="text-[10px] text-gray-500 font-semibold tracking-wide">PRO PLAN</p>
+          </div>
+          <ChevronDown size={14} className="text-gray-500 group-hover:text-white transition-colors" />
+        </button>
       </div>
     </header>
   );

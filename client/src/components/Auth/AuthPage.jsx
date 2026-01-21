@@ -47,67 +47,72 @@ const AuthPage = () => {
     };
 
     return (
-        <div className="min-h-screen bg-ctp-crust flex items-center justify-center p-4 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-ctp-mantle to-ctp-crust">
+        <div className="min-h-screen bg-[#0d0d12] flex items-center justify-center p-4 relative overflow-hidden font-sans">
             {/* Ambient Background */}
-            <div className="absolute inset-0 overflow-hidden pointer-events-none">
-                <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-ctp-blue/10 rounded-full blur-3xl animate-pulse" />
-                <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-ctp-mauve/10 rounded-full blur-3xl animate-pulse delay-1000" />
+            <div className="absolute inset-0 pointer-events-none">
+                <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_50%_0%,rgba(59,130,246,0.15),transparent_50%)]"></div>
+                <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[100px] animate-pulse"></div>
+                <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/10 rounded-full blur-[80px] animate-float"></div>
             </div>
 
-            <div className="w-full max-w-md relative z-10">
+            <div className="w-full max-w-md relative z-10 animate-slide-up">
                 {/* Logo */}
                 <div className="text-center mb-8">
-                    <div className="inline-flex items-center justify-center gap-3 mb-4">
-                        <div className="p-3 bg-ctp-blue/20 rounded-2xl text-ctp-blue">
-                            <Cloud size={32} strokeWidth={2.5} />
+                    <div className="inline-flex items-center justify-center gap-3 mb-4 relative group cursor-default">
+                        <div className="absolute inset-0 bg-blue-500/20 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                        <div className="p-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg relative">
+                            <Cloud size={32} className="text-white" strokeWidth={2.5} />
                         </div>
                     </div>
-                    <h1 className="text-3xl font-bold text-ctp-text">autumn drive</h1>
-                    <p className="text-ctp-subtext0 mt-2">Secure cloud storage powered by Discord</p>
+                    <h1 className="text-4xl font-bold text-white tracking-tight mb-2">autumn<span className="text-blue-500">drive</span></h1>
+                    <p className="text-gray-400">Secure cloud storage for your digital life</p>
                 </div>
 
                 {/* Card */}
-                <div className="bg-ctp-mantle/80 backdrop-blur-xl rounded-3xl border border-ctp-surface0/20 p-8 shadow-2xl">
+                <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/5 p-8 shadow-2xl relative overflow-hidden">
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+
                     {/* Tabs */}
-                    <div className="flex mb-8 bg-ctp-base/50 rounded-xl p-1">
+                    <div className="flex mb-8 bg-black/20 rounded-xl p-1.5 backdrop-blur-md">
                         <button
                             onClick={() => { setIsLogin(true); setError(""); setSuccess(""); }}
-                            className={`flex-1 py-2.5 px-4 rounded-lg font-semibold transition-all ${isLogin
-                                ? "bg-ctp-blue text-ctp-base shadow-lg"
-                                : "text-ctp-subtext0 hover:text-ctp-text"
+                            className={`flex-1 py-2.5 px-4 rounded-lg font-bold text-sm transition-all duration-300 ${isLogin
+                                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
+                                : "text-gray-500 hover:text-gray-300"
                                 }`}
                         >
                             Sign In
                         </button>
                         <button
                             onClick={() => { setIsLogin(false); setError(""); setSuccess(""); }}
-                            className={`flex-1 py-2.5 px-4 rounded-lg font-semibold transition-all ${!isLogin
-                                ? "bg-ctp-blue text-ctp-base shadow-lg"
-                                : "text-ctp-subtext0 hover:text-ctp-text"
+                            className={`flex-1 py-2.5 px-4 rounded-lg font-bold text-sm transition-all duration-300 ${!isLogin
+                                ? "bg-blue-600 text-white shadow-lg shadow-blue-500/20"
+                                : "text-gray-500 hover:text-gray-300"
                                 }`}
                         >
                             Sign Up
                         </button>
                     </div>
 
-                    {/* Error Message */}
+                    {/* Messages */}
                     {error && (
-                        <div className="mb-6 p-4 bg-ctp-red/10 border border-ctp-red/20 rounded-xl text-ctp-red text-sm font-medium">
+                        <div className="mb-6 p-4 bg-red-500/10 border border-red-500/20 rounded-xl text-red-400 text-sm font-medium flex items-center gap-2 animate-fade-in">
+                            <div className="w-1.5 h-1.5 rounded-full bg-red-500"></div>
                             {error}
                         </div>
                     )}
 
-                    {/* Success Message */}
                     {success && (
-                        <div className="mb-6 p-4 bg-ctp-green/10 border border-ctp-green/20 rounded-xl text-ctp-green text-sm font-medium">
+                        <div className="mb-6 p-4 bg-emerald-500/10 border border-emerald-500/20 rounded-xl text-emerald-400 text-sm font-medium flex items-center gap-2 animate-fade-in">
+                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
                             {success}
                         </div>
                     )}
 
                     {/* Form */}
                     <form onSubmit={handleSubmit} className="space-y-5">
-                        <div className="space-y-2">
-                            <label className="text-sm font-semibold text-ctp-subtext0 flex items-center gap-2">
+                        <div className="space-y-2 group">
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2 group-focus-within:text-blue-400 transition-colors">
                                 <Mail size={14} />
                                 Email
                             </label>
@@ -115,14 +120,14 @@ const AuthPage = () => {
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
-                                className="w-full px-4 py-3 bg-ctp-base/60 border border-ctp-surface0/30 rounded-xl text-ctp-text placeholder-ctp-subtext0/50 focus:outline-none focus:ring-2 focus:ring-ctp-blue/50 focus:border-transparent transition-all"
-                                placeholder="you@example.com"
+                                className="w-full px-4 py-3.5 bg-black/20 border border-white/5 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:bg-black/40 focus:border-blue-500/50 transition-all font-medium"
+                                placeholder="name@example.com"
                                 required
                             />
                         </div>
 
-                        <div className="space-y-2">
-                            <label className="text-sm font-semibold text-ctp-subtext0 flex items-center gap-2">
+                        <div className="space-y-2 group">
+                            <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2 group-focus-within:text-blue-400 transition-colors">
                                 <Lock size={14} />
                                 Password
                             </label>
@@ -130,15 +135,15 @@ const AuthPage = () => {
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                className="w-full px-4 py-3 bg-ctp-base/60 border border-ctp-surface0/30 rounded-xl text-ctp-text placeholder-ctp-subtext0/50 focus:outline-none focus:ring-2 focus:ring-ctp-blue/50 focus:border-transparent transition-all"
+                                className="w-full px-4 py-3.5 bg-black/20 border border-white/5 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:bg-black/40 focus:border-blue-500/50 transition-all font-medium"
                                 placeholder="••••••••"
                                 required
                             />
                         </div>
 
                         {!isLogin && (
-                            <div className="space-y-2">
-                                <label className="text-sm font-semibold text-ctp-subtext0 flex items-center gap-2">
+                            <div className="space-y-2 group animate-fade-in">
+                                <label className="text-xs font-bold text-gray-500 uppercase tracking-wider flex items-center gap-2 group-focus-within:text-blue-400 transition-colors">
                                     <Lock size={14} />
                                     Confirm Password
                                 </label>
@@ -146,7 +151,7 @@ const AuthPage = () => {
                                     type="password"
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
-                                    className="w-full px-4 py-3 bg-ctp-base/60 border border-ctp-surface0/30 rounded-xl text-ctp-text placeholder-ctp-subtext0/50 focus:outline-none focus:ring-2 focus:ring-ctp-blue/50 focus:border-transparent transition-all"
+                                    className="w-full px-4 py-3.5 bg-black/20 border border-white/5 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:bg-black/40 focus:border-blue-500/50 transition-all font-medium"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -156,7 +161,7 @@ const AuthPage = () => {
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full py-3.5 bg-ctp-blue hover:bg-ctp-blue/90 text-ctp-base font-bold rounded-xl flex items-center justify-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-ctp-blue/20"
+                            className="w-full py-4 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-bold rounded-xl flex items-center justify-center gap-2 transition-all transform hover:scale-[1.02] active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/20"
                         >
                             {loading ? (
                                 <Loader2 size={20} className="animate-spin" />
@@ -171,8 +176,8 @@ const AuthPage = () => {
                 </div>
 
                 {/* Footer */}
-                <p className="text-center mt-6 text-ctp-subtext0/60 text-sm">
-                    By continuing, you agree to our Terms of Service
+                <p className="text-center mt-8 text-gray-600 text-xs font-medium">
+                    By continuing, you agree to our <a href="#" className="text-gray-400 hover:text-white transition-colors">Terms of Service</a>
                 </p>
             </div>
         </div>

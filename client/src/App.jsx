@@ -88,12 +88,18 @@ const Dashboard = () => {
 
   return (
     <div
-      className="flex h-screen bg-ctp-crust overflow-hidden bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-ctp-mantle to-ctp-crust relative"
+      className="flex h-screen bg-[#0d0d12] overflow-hidden relative selection:bg-blue-500/30 selection:text-blue-200 font-sans"
       onDragEnter={handleDragEnter}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
       onDrop={handleDrop}
     >
+      {/* Background Ambience */}
+      <div className="fixed inset-0 pointer-events-none z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/10 rounded-full blur-[120px] animate-float" />
+        <div className="absolute bottom-[-10%] right-[-10%] w-[30%] h-[30%] bg-indigo-600/10 rounded-full blur-[100px] animate-pulse" />
+      </div>
+
       <DragDropOverlay isDragging={isDragging} />
       <SettingsModal
         open={settingsOpen}
@@ -106,12 +112,12 @@ const Dashboard = () => {
 
       {/* Mobile Sidebar Overlay */}
       {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 md:hidden" onClick={() => setSidebarOpen(false)} />
+        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 md:hidden transition-opacity duration-300" onClick={() => setSidebarOpen(false)} />
       )}
 
-      {/* Sidebar */}
+      {/* Sidebar - Floating Island */}
       <div
-        className={`fixed md:relative z-50 h-full transition-transform duration-300 transform ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
+        className={`fixed md:relative z-50 h-full transition-transform duration-300 ease-[cubic-bezier(0.23,1,0.32,1)] ${sidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"
           }`}
       >
         <Sidebar
@@ -125,7 +131,8 @@ const Dashboard = () => {
         />
       </div>
 
-      <main className="flex-1 flex flex-col h-full overflow-hidden relative">
+      {/* Main Content - Floating Island */}
+      <main className="flex-1 flex flex-col h-[calc(100%-2rem)] my-4 mr-4 rounded-3xl bg-glass-surface/40 backdrop-blur-xl border border-white/5 shadow-2xl overflow-hidden relative z-10">
         <Header
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
@@ -137,24 +144,47 @@ const Dashboard = () => {
           user={user}
         />
 
-        <div className="flex-1 overflow-y-auto p-6 md:p-8">
+        <div className="flex-1 overflow-y-auto p-6 md:p-8 scrollbar-thin scrollbar-thumb-white/10 hover:scrollbar-thumb-white/20">
           <div className="max-w-7xl mx-auto">
-            {/* Navigation */}
-            {!searchTerm && view !== "recent" && (
-              <Breadcrumbs
-                currentPath={currentPath}
-                setCurrentPath={setCurrentPath}
-                createFolder={createFolder}
-                view={view}
-              />
-            )}
+            {/* Quick Actions / Navigation */}
+            <div className="mb-8">
+              {!searchTerm && view !== "recent" && (
+                <Breadcrumbs
+                  currentPath={currentPath}
+                  setCurrentPath={setCurrentPath}
+                  createFolder={createFolder}
+                  view={view}
+                />
+              )}
+            </div>
 
             {/* Upload Widget (Dashboard - Root) */}
             {view === "dashboard" && !searchTerm && currentPath === "/" && (
               <>
-                <UploadWidget uploadState={uploadState} currentPath={currentPath} />
-                <div className="flex items-center justify-between mb-4 mt-8">
-                  <h3 className="text-ctp-subtext0/60 font-bold text-xs uppercase tracking-widest pl-1">
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-10 animate-fade-in">
+                  <div className="lg:col-span-2">
+                    <div className="h-full rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-700 p-8 relative overflow-hidden group shadow-lg shadow-blue-900/20">
+                      <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2 group-hover:bg-white/20 transition-all duration-700"></div>
+                      <div className="relative z-10">
+                        <h2 className="text-3xl font-bold text-white mb-2">Upload Files</h2>
+                        <p className="text-blue-100 mb-6 max-w-md">Drag and drop your files here or click to browse. We support images, videos, documents and more.</p>
+                        <UploadWidget uploadState={uploadState} currentPath={currentPath} />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="hidden lg:flex flex-col justify-between p-6 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm">
+                    <h3 className="text-lg font-bold text-white">Storage Status</h3>
+                    <div className="flex-1 flex items-center justify-center">
+                      <div className="radial-progress text-blue-500" style={{ "--value": 70, "--size": "12rem", "--thickness": "1rem" }} role="progressbar">
+                        <span className="text-2xl font-bold text-white">70%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center justify-between mb-6">
+                  <h3 className="text-white font-bold text-lg tracking-tight flex items-center gap-2">
+                    <span className="w-1.5 h-6 bg-blue-500 rounded-full"></span>
                     Recent Uploads
                   </h3>
                 </div>
@@ -163,7 +193,7 @@ const Dashboard = () => {
 
             {/* Upload Widget (Dashboard - Folder) */}
             {view === "dashboard" && !searchTerm && currentPath !== "/" && (
-              <div className="mb-6">
+              <div className="mb-8 animate-fade-in">
                 <UploadWidget uploadState={uploadState} currentPath={currentPath} />
               </div>
             )}
@@ -180,7 +210,6 @@ const Dashboard = () => {
                 activeOps={activeOps}
                 onSelect={(file) => {
                   const ext = file.name.split(".").pop().toLowerCase();
-                  // Preview only supported types
                   if (["png", "jpg", "jpeg", "gif", "webp", "mp4", "webm", "mkv", "mov", "mp3", "wav", "ogg", "pdf"].includes(ext)) {
                     setPreviewFile(file);
                   }

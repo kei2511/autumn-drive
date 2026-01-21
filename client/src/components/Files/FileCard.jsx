@@ -1,4 +1,4 @@
-import { Archive, Download, FileImage, FileText, FileVideo, Music, Trash2, Loader2 } from "lucide-react";
+import { Archive, Download, FileImage, FileText, FileVideo, Music, Trash2, Loader2, MoreVertical } from "lucide-react";
 
 const FileCard = ({ file, api, onDelete, onDownload, activeOps, onClick }) => {
   const size = (file.size / 1024 / 1024).toFixed(2);
@@ -10,18 +10,18 @@ const FileCard = ({ file, api, onDelete, onDownload, activeOps, onClick }) => {
 
   const getIcon = () => {
     if (["png", "jpg", "jpeg", "gif", "webp"].includes(ext))
-      return { icon: <FileImage size={24} />, color: "text-ctp-sky", bg: "bg-ctp-sky/10" };
+      return { icon: <FileImage size={28} />, color: "text-blue-400", bg: "bg-blue-500/20", glow: "shadow-blue-500/20" };
     if (["mp4", "mkv", "webm", "mov"].includes(ext))
-      return { icon: <FileVideo size={24} />, color: "text-ctp-mauve", bg: "bg-ctp-mauve/10" };
+      return { icon: <FileVideo size={28} />, color: "text-pink-400", bg: "bg-pink-500/20", glow: "shadow-pink-500/20" };
     if (["mp3", "wav", "ogg"].includes(ext))
-      return { icon: <Music size={24} />, color: "text-ctp-green", bg: "bg-ctp-green/10" };
+      return { icon: <Music size={28} />, color: "text-emerald-400", bg: "bg-emerald-500/20", glow: "shadow-emerald-500/20" };
     if (["zip", "rar", "7z"].includes(ext))
-      return { icon: <Archive size={24} />, color: "text-ctp-yellow", bg: "bg-ctp-yellow/10" };
+      return { icon: <Archive size={28} />, color: "text-yellow-400", bg: "bg-yellow-500/20", glow: "shadow-yellow-500/20" };
 
-    return { icon: <FileText size={24} />, color: "text-ctp-text", bg: "bg-ctp-surface0/50" };
+    return { icon: <FileText size={28} />, color: "text-gray-200", bg: "bg-white/10", glow: "shadow-white/10" };
   };
 
-  const { icon, color, bg } = getIcon();
+  const { icon, color, bg, glow } = getIcon();
   const dateStr = file.date
     ? new Date(file.date).toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" })
     : "";
@@ -29,56 +29,59 @@ const FileCard = ({ file, api, onDelete, onDownload, activeOps, onClick }) => {
   return (
     <div
       onClick={!isLoading ? onClick : undefined}
-      className={`group flex flex-col p-4 rounded-xl bg-ctp-base border border-ctp-surface0/20 hover:border-ctp-blue/50 hover:bg-ctp-mantle hover:-translate-y-1 transition-all duration-300 shadow-sm hover:shadow-md h-full cursor-pointer relative overflow-hidden ${isLoading ? "opacity-70 pointer-events-none" : ""
+      className={`group flex flex-col p-5 rounded-2xl bg-white/5 border border-white/5 hover:bg-white/10 hover:border-white/20 transition-all duration-300 shadow-lg hover:shadow-2xl h-full cursor-pointer relative overflow-hidden backdrop-blur-sm ${isLoading ? "opacity-70 pointer-events-none" : ""
         }`}
     >
+      <div className={`absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-white/5 to-transparent rounded-full blur-2xl -translate-y-10 translate-x-10 group-hover:translate-x-5 transition-transform duration-700`} />
+
       {/* Top: Icon + Info */}
-      <div className="flex items-start gap-4 mb-3">
-        <div className={`p-3 rounded-lg ${bg} ${color} shrink-0 group-hover:opacity-80 transition-opacity flex items-center justify-center`}>
-          {isLoading ? <Loader2 size={24} className="animate-spin" /> : icon}
+      <div className="flex items-start justify-between gap-4 mb-8 relative z-10">
+        <div className={`p-3.5 rounded-2xl ${bg} ${color} shadow-lg ${glow} shrink-0 group-hover:scale-105 transition-transform duration-300 flex items-center justify-center`}>
+          {isLoading ? <Loader2 size={28} className="animate-spin" /> : icon}
         </div>
 
-        <div className="flex-1 min-w-0 pt-0.5">
-          <h3 className="text-sm font-bold text-ctp-text truncate mb-1 group-hover:text-ctp-blue transition-colors" title={file.name}>
-            {file.name}
-          </h3>
-          <div className="flex flex-col gap-0.5 text-xs text-ctp-subtext0/60">
-            <span className="font-mono">{size} MB</span>
-            <span className="truncate">{dateStr}</span>
+        <button className="p-1.5 text-gray-500 hover:text-white hover:bg-white/10 rounded-lg transition-colors opacity-0 group-hover:opacity-100">
+          <MoreVertical size={16} />
+        </button>
+      </div>
+
+      <div className="mt-auto relative z-10">
+        <h3 className="text-base font-bold text-gray-100 truncate mb-1 group-hover:text-blue-400 transition-colors" title={file.name}>
+          {file.name}
+        </h3>
+        <div className="flex items-center justify-between mt-2">
+          <div className="flex flex-col">
+            <span className="text-xs font-medium text-gray-400">{size} MB</span>
+            <span className="text-[10px] text-gray-600 font-bold uppercase tracking-wider">{ext}</span>
           </div>
+          <span className="text-[10px] text-gray-500 font-medium">{dateStr}</span>
         </div>
       </div>
 
-      {/* Bottom: Actions */}
-      <div className="mt-auto pt-3 border-t border-ctp-surface0/10 flex items-center justify-between gap-2">
-        <span className="text-[10px] text-ctp-subtext0/40 uppercase font-bold tracking-wider truncate max-w-[40%]" title={ext.toUpperCase()}>
-          {ext.toUpperCase()}
-        </span>
-
-        <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDownload(file);
-            }}
-            disabled={isLoading}
-            className="flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-bold text-ctp-blue bg-ctp-surface0 hover:bg-ctp-surface1 border border-ctp-blue/20 transition-all shadow-sm active:scale-95 disabled:opacity-50"
-          >
-            {isDownloading ? <Loader2 size={14} className="animate-spin" /> : <Download size={14} />}
-            {isDownloading ? "Starting..." : "Download"}
-          </button>
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onDelete(file.name);
-            }}
-            disabled={isLoading}
-            className="p-1.5 text-ctp-red bg-ctp-surface0/50 hover:bg-ctp-red/10 border border-transparent hover:border-ctp-red/20 rounded-lg transition-all active:scale-95 disabled:opacity-50 flex items-center justify-center"
-            title="Delete"
-          >
-            {isDeleting ? <Loader2 size={16} className="animate-spin" /> : <Trash2 size={16} />}
-          </button>
-        </div>
+      {/* Hover Actions Overlay */}
+      <div className="absolute inset-0 bg-black/60 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-3 z-20">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDownload(file);
+          }}
+          disabled={isLoading}
+          className="p-3 rounded-xl bg-white text-black hover:scale-110 transition-transform shadow-lg"
+          title="Download"
+        >
+          {isDownloading ? <Loader2 size={20} className="animate-spin" /> : <Download size={20} />}
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onDelete(file.name);
+          }}
+          disabled={isLoading}
+          className="p-3 rounded-xl bg-red-500 text-white hover:bg-red-600 hover:scale-110 transition-all shadow-lg shadow-red-500/20"
+          title="Delete"
+        >
+          {isDeleting ? <Loader2 size={20} className="animate-spin" /> : <Trash2 size={20} />}
+        </button>
       </div>
     </div>
   );

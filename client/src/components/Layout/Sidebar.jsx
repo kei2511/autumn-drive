@@ -1,82 +1,81 @@
-import { Clock, Cloud, HardDrive, LayoutDashboard, Settings, Video, Image as ImageIcon, Music, FileText } from "lucide-react";
+import { Clock, Cloud, HardDrive, LayoutDashboard, Settings, Video, Image as ImageIcon, Music, FileText, ChevronRight } from "lucide-react";
 
 const Sidebar = ({ stats, view, setView, onSettingsClick }) => {
   const menuItems = [
-    { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={18} /> },
-    { id: "files", label: "My Files", icon: <HardDrive size={18} /> },
-    { id: "recent", label: "Recent", icon: <Clock size={18} /> },
+    { id: "dashboard", label: "Dashboard", icon: <LayoutDashboard size={20} /> },
+    { id: "files", label: "My Files", icon: <HardDrive size={20} /> },
+    { id: "recent", label: "Recent", icon: <Clock size={20} /> },
   ];
 
   return (
-    <aside className="w-full md:w-72 bg-ctp-mantle/95 backdrop-blur-xl border-r border-ctp-surface0/20 flex flex-col h-full shrink-0 relative overflow-hidden z-20">
-      {/* Ambient Glow */}
-      <div className="absolute top-0 left-0 w-full h-32 bg-gradient-to-b from-ctp-blue/5 to-transparent pointer-events-none" />
+    <aside className="glass-panel w-full md:w-64 h-[calc(100%-2rem)] m-4 rounded-3xl flex flex-col relative overflow-hidden transition-all duration-300 group hover:shadow-2xl hover:bg-glass-surface/80">
 
       {/* Brand */}
-      <div className="p-5 border-b border-ctp-surface0/10 relative z-10">
-        <div className="flex items-center gap-2.5">
-          <div className="p-1.5 bg-ctp-blue/20 rounded-lg text-ctp-blue">
-            <Cloud size={20} strokeWidth={2.5} />
-          </div>
-          <div>
-            <h1 className="text-lg font-bold text-ctp-text leading-tight">autumn drive</h1>
-            <p className="text-[9px] text-ctp-subtext0/50 font-black tracking-widest uppercase">Cloud Storage</p>
-          </div>
+      <div className="p-6 relative z-10 flex flex-col items-center">
+        <div className="p-3 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl shadow-lg shadow-blue-500/20 mb-3 animate-float">
+          <Cloud size={28} className="text-white" strokeWidth={2.5} />
         </div>
+        <h1 className="text-xl font-bold text-white tracking-tight">autumn<span className="text-blue-400">drive</span></h1>
+        <p className="text-[10px] text-gray-400 font-bold tracking-[0.2em] uppercase mt-1">Personal Cloud</p>
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2 overflow-y-auto relative z-10">
-        <div className="text-[10px] uppercase font-bold text-ctp-subtext0/50 px-3 mb-2 tracking-widest">Menu</div>
+      <nav className="flex-1 px-4 space-y-2 overflow-y-auto relative z-10 scrollbar-hide py-2">
+        <div className="text-[10px] uppercase font-bold text-gray-500 px-4 mb-2 tracking-widest mt-2">Menu</div>
 
         {menuItems.map((item) => (
           <button
             key={item.id}
             onClick={() => setView(item.id)}
-            className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl font-bold transition-all border ${view === item.id
-              ? "bg-ctp-blue/15 text-ctp-blue border-ctp-blue/20 shadow-sm"
-              : "text-ctp-subtext0/60 border-transparent hover:bg-ctp-surface0/50 hover:text-ctp-text"
+            className={`w-full flex items-center justify-between px-4 py-3.5 rounded-2xl font-medium transition-all duration-300 group/btn relative overflow-hidden ${view === item.id
+              ? "bg-white/10 text-white shadow-lg border border-white/5"
+              : "text-gray-400 hover:text-white hover:bg-white/5 border border-transparent"
               }`}
           >
-            {item.icon}
-            <span>{item.label}</span>
+            <div className={`absolute inset-0 bg-blue-500/10 blur-xl transition-opacity duration-300 ${view === item.id ? 'opacity-100' : 'opacity-0'}`} />
+            <div className="flex items-center gap-3 relative z-10">
+              <div className={`transition-transform duration-300 ${view === item.id ? 'scale-110 text-blue-400' : 'group-hover/btn:scale-110'}`}>
+                {item.icon}
+              </div>
+              <span className="tracking-wide">{item.label}</span>
+            </div>
+            {view === item.id && <ChevronRight size={14} className="text-blue-400" />}
           </button>
         ))}
 
-        <div className="text-[10px] uppercase font-bold text-ctp-subtext0/50 px-3 mt-6 mb-2 tracking-widest">
+        <div className="text-[10px] uppercase font-bold text-gray-500 px-4 mt-8 mb-3 tracking-widest">
           Storage
         </div>
 
-        {/* Storage Widget */}
-        <div className="bg-ctp-base/40 rounded-xl p-4 border border-ctp-surface0/10 backdrop-blur-sm relative group overflow-hidden">
-          <div className="flex justify-between items-baseline mb-2">
-            <span className="text-[10px] font-black text-ctp-subtext0/60 uppercase tracking-widest">Used Space</span>
-            <span className="text-xs font-black text-ctp-blue">{formatSize(stats.size)}</span>
+        {/* Improved Storage Widget */}
+        <div className="bg-gradient-to-b from-white/5 to-transparent rounded-2xl p-5 border border-white/5 relative overflow-hidden mx-1">
+          <div className="flex justify-between items-end mb-3">
+            <span className="text-2xl font-bold text-white">{formatSize(stats.size)}</span>
+            <span className="text-[10px] text-gray-400 mb-1">used of 50 GB</span>
           </div>
 
-          <progress
-            className="progress progress-primary w-full h-1 bg-ctp-surface0 rounded-full overflow-hidden mb-4"
-            value={Math.min((stats.size / (50 * 1024 * 1024 * 1024)) * 100, 100)}
-            max="100"
-          ></progress>
-
-          <div className="space-y-2">
-            <SimpleStorageItem icon={<Video size={12} />} label="Videos" count={stats.types?.video || 0} size={stats.sizes?.video || 0} color="text-ctp-mauve" />
-            <SimpleStorageItem icon={<ImageIcon size={12} />} label="Images" count={stats.types?.image || 0} size={stats.sizes?.image || 0} color="text-ctp-blue" />
-            <SimpleStorageItem icon={<Music size={12} />} label="Audio" count={stats.types?.audio || 0} size={stats.sizes?.audio || 0} color="text-ctp-green" />
-            <SimpleStorageItem icon={<FileText size={12} />} label="Other" count={stats.types?.other || 0} size={stats.sizes?.other || 0} color="text-ctp-subtext1" />
+          <div className="w-full h-1.5 bg-gray-700/50 rounded-full overflow-hidden mb-5">
+            <div
+              className="h-full bg-gradient-to-r from-blue-500 to-indigo-400 shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-1000 ease-out"
+              style={{ width: `${Math.min((stats.size / (50 * 1024 * 1024 * 1024)) * 100, 100)}%` }}
+            />
           </div>
 
+          <div className="space-y-3">
+            <SimpleStorageItem icon={<Video size={10} />} label="Videos" count={stats.types?.video} color="text-pink-400" />
+            <SimpleStorageItem icon={<ImageIcon size={10} />} label="Images" count={stats.types?.image} color="text-blue-400" />
+            <SimpleStorageItem icon={<FileText size={10} />} label="Docs" count={stats.types?.other} color="text-emerald-400" />
+          </div>
         </div>
       </nav>
 
       {/* Footer */}
-      <div className="p-4 border-t border-ctp-surface0/10 relative z-10 space-y-1">
+      <div className="p-4 relative z-10">
         <button
           onClick={onSettingsClick}
-          className="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-ctp-subtext0/60 hover:text-ctp-text transition-all text-sm hover:bg-ctp-surface0/5"
+          className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-gray-400 hover:text-white transition-all text-sm hover:bg-white/5 border border-transparent hover:border-white/5 group"
         >
-          <Settings size={16} />
+          <Settings size={18} className="group-hover:rotate-45 transition-transform duration-500" />
           <span>Settings</span>
         </button>
       </div>
@@ -84,14 +83,13 @@ const Sidebar = ({ stats, view, setView, onSettingsClick }) => {
   );
 };
 
-const SimpleStorageItem = ({ icon, label, count, size, color }) => (
-  <div className="flex items-center justify-between">
-    <div className="flex items-center gap-2.5 text-ctp-subtext1">
-      <div className={`${color} opacity-90`}>{icon}</div>
-      <span className="text-xs font-semibold">{label}</span>
-      <span className="text-[10px] opacity-40 font-black">({count})</span>
+const SimpleStorageItem = ({ icon, label, count = 0, color }) => (
+  <div className="flex items-center justify-between group cursor-default">
+    <div className="flex items-center gap-2.5 text-gray-400 group-hover:text-gray-300 transition-colors">
+      <div className={`${color} p-1.5 rounded-lg bg-white/5`}>{icon}</div>
+      <span className="text-xs font-medium">{label}</span>
     </div>
-    <span className="text-xs font-bold text-ctp-text/60">{formatSize(size)}</span>
+    <span className="text-[10px] font-bold text-gray-600 bg-white/5 px-2 py-0.5 rounded-md min-w-[24px] text-center">{count}</span>
   </div>
 );
 

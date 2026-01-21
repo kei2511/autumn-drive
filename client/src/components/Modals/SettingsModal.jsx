@@ -7,15 +7,8 @@ const SettingsModal = ({ open, onClose, user, onSignOut }) => {
   if (!open) return null;
 
   const handleThemeChange = (theme) => {
-    // 1. Set DaisyUI theme for compat
-    document.documentElement.setAttribute("data-theme", theme);
-
-    // 2. Set Catppuccin Class (flavours: latte, mocha) - REMOVING old ones first
-    document.documentElement.classList.remove("latte", "mocha", "frappe", "macchiato");
-    document.documentElement.classList.add(theme);
-
-    localStorage.setItem("theme", theme);
-    addToast(`Theme changed to ${theme}`, "success");
+    // Legacy support or just mock for now as we are enforcing dark mode premium
+    addToast(`Theme switching is managed by system`, "info");
   };
 
   const handleSignOut = async () => {
@@ -29,104 +22,73 @@ const SettingsModal = ({ open, onClose, user, onSignOut }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
-      <div className="bg-ctp-base w-full max-w-md rounded-2xl border border-ctp-surface0/10 shadow-2xl overflow-hidden relative">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/60 backdrop-blur-md p-4 animate-fade-in">
+      <div className="bg-[#181825] w-full max-w-md rounded-3xl border border-white/5 shadow-2xl overflow-hidden relative animate-scale-in">
+        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 to-indigo-500"></div>
+
         {/* Header */}
-        <div className="p-6 border-b border-ctp-surface0/10 flex justify-between items-center bg-ctp-mantle/50">
-          <h2 className="text-xl font-bold text-ctp-text flex items-center gap-2">
-            <Shield size={20} className="text-ctp-blue" />
+        <div className="p-6 flex justify-between items-center relative z-10">
+          <h2 className="text-xl font-bold text-white flex items-center gap-2 tracking-tight">
+            <Shield size={22} className="text-blue-500" />
             Settings
           </h2>
-          <button onClick={onClose} className="text-ctp-subtext0 hover:text-ctp-red transition-colors">
+          <button onClick={onClose} className="p-2 rounded-full text-gray-400 hover:text-white hover:bg-white/10 transition-colors">
             <X size={20} />
           </button>
         </div>
 
         {/* Body */}
-        <div className="p-6 space-y-6">
+        <div className="px-6 pb-6 space-y-6 relative z-10">
           {/* Account Section */}
           {user && (
             <div>
-              <h3 className="text-xs font-bold text-ctp-subtext0/50 uppercase tracking-widest mb-3 flex items-center gap-2">
-                <User size={14} /> Account
+              <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <User size={12} /> Account
               </h3>
-              <div className="bg-ctp-crust/50 rounded-xl p-4 border border-ctp-surface0/10 space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 bg-ctp-blue/20 rounded-full flex items-center justify-center text-ctp-blue">
-                    <User size={20} />
+              <div className="bg-white/5 rounded-2xl p-4 border border-white/5 space-y-4">
+                <div className="flex items-center gap-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-blue-500/20">
+                    <User size={24} />
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-semibold text-ctp-text truncate">{user.email}</p>
-                    <p className="text-xs text-ctp-subtext0">Logged in</p>
+                    <p className="text-sm font-bold text-white truncate">{user.email}</p>
+                    <p className="text-xs text-gray-400">Pro Plan Member</p>
                   </div>
                 </div>
                 <button
                   onClick={handleSignOut}
-                  className="w-full btn btn-sm bg-ctp-red/10 border-ctp-red/20 text-ctp-red hover:bg-ctp-red hover:text-ctp-base hover:border-ctp-red transition-all"
+                  className="w-full py-2.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center gap-2 text-sm font-bold"
                 >
-                  <LogOut size={14} />
+                  <LogOut size={16} />
                   Sign Out
                 </button>
               </div>
             </div>
           )}
 
-          {/* Theme Section */}
-          <div>
-            <h3 className="text-xs font-bold text-ctp-subtext0/50 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <Monitor size={14} /> Appearance
-            </h3>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                onClick={() => handleThemeChange("mocha")}
-                className="btn btn-outline btn-sm border-ctp-surface1/50 bg-ctp-surface0/20 text-ctp-text hover:bg-ctp-mantle hover:text-ctp-blue"
-              >
-                <Moon size={14} /> Mocha (Dark)
-              </button>
-              <button
-                onClick={() => handleThemeChange("latte")}
-                className="btn btn-outline btn-sm border-ctp-surface1/50 bg-ctp-surface0/20 text-ctp-text hover:bg-ctp-base hover:text-ctp-blue"
-              >
-                <Sun size={14} /> Latte (Light)
-              </button>
-            </div>
-          </div>
-
           {/* Info Section */}
           <div>
-            <h3 className="text-xs font-bold text-ctp-subtext0/50 uppercase tracking-widest mb-3 flex items-center gap-2">
-              <Info size={14} /> System Info
+            <h3 className="text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+              <Info size={12} /> System Info
             </h3>
-            <div className="bg-ctp-crust/50 rounded-xl p-4 border border-ctp-surface0/10 space-y-2">
-              <div className="flex justify-between text-sm">
-                <span className="text-ctp-subtext0">Client Version</span>
-                <span className="text-ctp-text font-mono">v3.2.0</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-ctp-subtext0">Protocol</span>
-                <span className="text-ctp-teal font-mono">Secure // Chunked</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-ctp-subtext0">Encryption</span>
-                <span className="text-ctp-green font-mono">AES-256-CTR</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-ctp-subtext0">Auth</span>
-                <span className="text-ctp-blue font-mono">Supabase JWT</span>
-              </div>
+            <div className="bg-white/5 rounded-2xl p-5 border border-white/5 space-y-3">
+              <InfoRow label="Client Version" value="v4.0.0-beta" valueColor="text-gray-300" />
+              <InfoRow label="Protocol" value="Secure // Chunked" valueColor="text-emerald-400" />
+              <InfoRow label="Encryption" value="AES-256-CTR" valueColor="text-blue-400" />
+              <InfoRow label="Auth Provider" value="Supabase JWT" valueColor="text-indigo-400" />
             </div>
           </div>
-        </div>
-
-        {/* Footer */}
-        <div className="p-4 border-t border-ctp-surface0/10 bg-ctp-crust/50 flex justify-end">
-          <button onClick={onClose} className="btn btn-ghost btn-sm text-ctp-text hover:bg-ctp-surface0/10">
-            Close
-          </button>
         </div>
       </div>
     </div>
   );
 };
+
+const InfoRow = ({ label, value, valueColor }) => (
+  <div className="flex justify-between text-sm items-center">
+    <span className="text-gray-500 font-medium">{label}</span>
+    <span className={`${valueColor} font-mono font-bold tracking-tight bg-white/5 px-2 py-0.5 rounded text-xs`}>{value}</span>
+  </div>
+);
 
 export default SettingsModal;
