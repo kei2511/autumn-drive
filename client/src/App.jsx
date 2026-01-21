@@ -174,9 +174,14 @@ const Dashboard = () => {
                   </div>
                   <div className="hidden lg:flex flex-col justify-between p-6 rounded-2xl border border-white/5 bg-white/5 backdrop-blur-sm">
                     <h3 className="text-lg font-bold text-white">Storage Status</h3>
-                    <div className="flex-1 flex items-center justify-center">
-                      <div className="radial-progress text-blue-500" style={{ "--value": 70, "--size": "12rem", "--thickness": "1rem" }} role="progressbar">
-                        <span className="text-2xl font-bold text-white">70%</span>
+                    <div className="flex-1 flex flex-col items-center justify-center gap-4">
+                      <div className="w-32 h-32 rounded-full border-4 border-emerald-500/30 flex items-center justify-center relative">
+                        <div className="absolute inset-0 rounded-full border-4 border-emerald-500 border-t-transparent animate-spin duration-[3000ms]"></div>
+                        <span className="text-3xl font-bold text-emerald-400">∞</span>
+                      </div>
+                      <div className="text-center">
+                        <p className="text-xl font-bold text-white">Unlimited</p>
+                        <p className="text-sm text-gray-400">Pro Plan Active</p>
                       </div>
                     </div>
                   </div>

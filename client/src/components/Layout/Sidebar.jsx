@@ -50,16 +50,16 @@ const Sidebar = ({ stats, view, setView, onSettingsClick }) => {
         {/* Improved Storage Widget */}
         <div className="bg-gradient-to-b from-white/5 to-transparent rounded-2xl p-5 border border-white/5 relative overflow-hidden mx-1">
           <div className="flex justify-between items-end mb-3">
-            <span className="text-2xl font-bold text-white">{formatSize(stats.size)}</span>
-            <span className="text-[10px] text-gray-400 mb-1">used of 50 GB</span>
+            <div>
+              <span className="text-2xl font-bold text-white">{formatSize(stats.size)}</span>
+              <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">Total Used</p>
+            </div>
+            <div className="px-2 py-1 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-[10px] font-bold uppercase tracking-wider animate-pulse">
+              Unlimited
+            </div>
           </div>
 
-          <div className="w-full h-1.5 bg-gray-700/50 rounded-full overflow-hidden mb-5">
-            <div
-              className="h-full bg-gradient-to-r from-blue-500 to-indigo-400 shadow-[0_0_10px_rgba(59,130,246,0.5)] transition-all duration-1000 ease-out"
-              style={{ width: `${Math.min((stats.size / (50 * 1024 * 1024 * 1024)) * 100, 100)}%` }}
-            />
-          </div>
+          <div className="w-full h-[1px] bg-white/10 my-4"></div>
 
           <div className="space-y-3">
             <SimpleStorageItem icon={<Video size={10} />} label="Videos" count={stats.types?.video} color="text-pink-400" />
