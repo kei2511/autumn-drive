@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { Cloud, Mail, Lock, User, ArrowRight, Loader2 } from "lucide-react";
 
 const AuthPage = () => {
@@ -73,8 +73,8 @@ const AuthPage = () => {
                         <button
                             onClick={() => { setIsLogin(true); setError(""); setSuccess(""); }}
                             className={`flex-1 py-2.5 px-4 rounded-lg font-semibold transition-all ${isLogin
-                                    ? "bg-ctp-blue text-ctp-base shadow-lg"
-                                    : "text-ctp-subtext0 hover:text-ctp-text"
+                                ? "bg-ctp-blue text-ctp-base shadow-lg"
+                                : "text-ctp-subtext0 hover:text-ctp-text"
                                 }`}
                         >
                             Sign In
@@ -82,8 +82,8 @@ const AuthPage = () => {
                         <button
                             onClick={() => { setIsLogin(false); setError(""); setSuccess(""); }}
                             className={`flex-1 py-2.5 px-4 rounded-lg font-semibold transition-all ${!isLogin
-                                    ? "bg-ctp-blue text-ctp-base shadow-lg"
-                                    : "text-ctp-subtext0 hover:text-ctp-text"
+                                ? "bg-ctp-blue text-ctp-base shadow-lg"
+                                : "text-ctp-subtext0 hover:text-ctp-text"
                                 }`}
                         >
                             Sign Up
